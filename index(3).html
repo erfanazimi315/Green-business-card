@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>کافه سبز - کارت ویزیت</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #111;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            width: 350px;
+            background: linear-gradient(135deg, #1a2e1a 0%, #0d0d0d 100%);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border: 1px solid #2c5e2c;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+        }
+
+        .info {
+            font-size: 14px;
+            color: #ccc;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+
+        .phone {
+            direction: ltr;
+            display: inline-block;
+        }
+
+        .hours {
+            font-size: 13px;
+            color: #aaa;
+            margin: 10px 0;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #4CAF50, transparent);
+            margin: 10px 0;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 25px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-map {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-call {
+            background-color: #333;
+            color: #4CAF50;
+            border: 1px solid #4CAF50;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <div class="logo">کافه سبز</div>
+        <div class="divider"></div>
+
+        <div class="info">
+            اصفهان، خمینی شهر، منظریه<br>
+            میدان فیض السلام، خیابان یزدان پناه شرقی<br>
+            ابتدای خیابان، کافه سبز
+        </div>
+
+        <div class="info">
+            تلفن: <span class="phone">09133760890</span>
+        </div>
+
+        <div class="divider"></div>
+        <div class="hours">ساعات کاری: همه‌روزه از ۸ صبح تا ۱۱ شب</div>
+
+        <div class="buttons">
+            <!-- دکمه نقشه گوگل با مختصات دقیق -->
+            <a href="https://maps.app.goo.gl/wAZFxvT6XWa7EAYz9" target="_blank" class="btn btn-map">📍 نقشه گوگل</a>
+
+            <!-- دکمه تماس -->
+            <a href="tel:09133760890" class="btn btn-call">📞 تماس سریع</a>
+        </div>
+    </div>
+</body>
+
+</html>
