@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> به کافه سبز خوش آمدید</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+</head>
+
+<body>
+    <!-- صفحه اصلی -->
+    <div id="main-page">
+        <header>
+            <div class="logo">
+                <button id="admin-btn" class="admin-btn">
+                    <img src="./img/lego-hed.png" alt="لوگو کافه">
+                </button>
+                <h1> کافه GREEN </h1>
+                <!-- بخش جستجو -->
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="search-input" class="search-input" placeholder="جستجوی محصولات...">
+                </div>
+            </div>
+        </header>
+
+        <!-- دیالوگ ورود رمز -->
+        <div id="password-dialog" class="dialog">
+            <div class="dialog-content">
+                <h3>ورود به بخش مدیریت</h3>
+                <input type="password" id="admin-password" placeholder="رمز عبور را وارد کنید">
+                <button id="submit-password">تایید</button>
+                <p id="password-error" class="error-message"></p>
+            </div>
+        </div>
+
+
+        <div class="featured-slider">
+            <div class="featured-slides" id="featured-slides">
+                <!-- اسلایدها به صورت دینامیک لود می‌شوند -->
+            </div>
+        </div>
+        <div class="featured-indicators" id="featured-indicators">
+            <!-- نشانگرها به صورت دینامیک لود می‌شوند -->
+        </div>
+        </section>
+
+        <nav class="categories">
+            <button class="category-btn active" data-category="all">
+                <i class="fas fa-shopping-basket"></i> همه
+            </button>
+            <button class="category-btn" data-category="coffee">
+                <i class="fas fa-coffee"></i> قهوه
+            </button>
+            <button class="category-btn" data-category="hot">
+                <i class="fas fa-fire"></i> نوشیدنی گرم
+            </button>
+            <button class="category-btn" data-category="cold">
+                <i class="fas fa-snowflake"></i> نوشیدنی سرد
+            </button>
+            <button class="category-btn" data-category="shake">
+                <i class="fas fa-glass-whiskey"></i> شیک
+            </button>
+            <button class="category-btn" data-category="snack">
+                <i class="fas fa-utensils"></i> میان وعده
+            </button>
+        </nav>
+
+        <main class="menu-container">
+            <div class="products-grid" id="products-container">
+                <!-- محصولات به صورت دینامیک لود می‌شوند -->
+            </div>
+        </main>
+
+        <footer>
+            <p>کافه سبز © 2025 </p>
+        </footer>
+    </div>
+
+    <!-- صفحه مدیریت (مخفی به صورت پیش‌فرض) -->
+    <div id="admin-page" style="display: none;">
+        <header>
+            <div class="logo">
+                <h1>مدیریت - کافه سبز</h1>
+            </div>
+        </header>
+
+        <nav class="admin-nav"><br>
+            <button style="margin-right: 10px;" id="back-to-menu">بازگشت به منو</button>
+        </nav>
+
+        <main class="admin-container">
+            <section class="add-product">
+                <h2>افزودن محصول جدید</h2>
+                <form id="add-product-form">
+                    <div class="form-group">
+                        <label for="product-category">دسته بندی:</label>
+                        <select id="product-category" required>
+                            <!-- دسته‌بندی‌ها به صورت دینامیک پر می‌شوند -->
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="product-name">نام محصول:</label>
+                        <input type="text" id="product-name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="product-price">قیمت (تومان):</label>
+                        <input type="number" id="product-price" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="product-image">تصویر محصول:</label>
+                        <input type="file" id="product-image" accept="image/*" required>
+                    </div>
+
+                    <button type="submit">ذخیره محصول</button>
+                </form>
+            </section>
+            <section class="categories-management">
+                <h2><i class="fas fa-tags"></i> مدیریت دسته‌بندی‌ها</h2>
+                <div class="add-category">
+                    <input type="text" id="new-category-name" placeholder="نام دسته جدید">
+                    <button id="add-category-btn"><i class="fas fa-plus"></i> افزودن دسته</button>
+                </div>
+                <div class="categories-list" id="categories-container">
+                    <!-- لیست دسته‌بندی‌ها -->
+                </div>
+            </section>
+
+            <section class="products-list">
+                <h2>محصولات موجود</h2>
+                <div class="admin-products" id="admin-products-container">
+                    <!-- لیست محصولات برای مدیریت -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // ================== تنظیمات Supabase ==================
+        const supabaseUrl = 'https://xklntvngiksksawedhqe.supabase.co'; // URL پروژه شما
+        const supabaseKey = 'your-anon-key'; // کلید عمومی anon
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        // ================== متغیرهای عمومی ==================
+        const ADMIN_PASSWORD = "sohail123"; // رمز مدیریت
+        let products = [];
+        let categories = [];
+        let currentEditId = null;
+        let currentSlide = 0;
+        let slideInterval;
+
+        // ================== توایع اصلی ==================
+        async function loadProducts() {
+            const { data, error } = await supabase.from('products').select('*');
+            if (error) {
+                console.error("خطا در دریافت محصولات:", error);
+                showAlert("خطا", "خطا در دریافت محصولات!", "error");
+                return [];
+            }
+            return data;
+        }
+
+        async function saveProduct(product) {
+            const { data, error } = await supabase
+                .from('products')
+                .insert([product])
+                .select();
+
+            if (error) {
+                console.error("خطا در ذخیره محصول:", error);
+                showAlert("خطا", "خطا در ذخیره محصول!", "error");
+                return null;
+            }
+            showAlert("موفقیت", "محصول ذخیره شد!", "success");
+            return data[0];
+        }
+
+        async function updateProduct(id, updatedData) {
+            const { data, error } = await supabase
+                .from('products')
+                .update(updatedData)
+                .eq('id', id)
+                .select();
+
+            if (error) {
+                console.error("خطا در به‌روزرسانی:", error);
+                showAlert("خطا", "خطا در به‌روزرسانی!", "error");
+                return null;
+            }
+            showAlert("موفقیت", "محصول به‌روزرسانی شد!", "success");
+            return data[0];
+        }
+
+        async function deleteProduct(id) {
+            const { error } = await supabase.from('products').delete().eq('id', id);
+            if (error) {
+                console.error("خطا در حذف:", error);
+                showAlert("خطا", "خطا در حذف محصول!", "error");
+                return false;
+            }
+            showAlert("موفقیت", "محصول حذف شد!", "success");
+            return true;
+        }
+
+        // ================== توایع مدیریت تصاویر ==================
+        async function uploadImage(file) {
+            const fileName = `products/${Date.now()}-${file.name}`;
+            const { data, error } = await supabase.storage
+                .from('product-images')
+                .upload(fileName, file);
+
+            if (error) {
+                console.error("خطا در آپلود تصویر:", error);
+                showAlert("خطا", "خطا در آپلود تصویر!", "error");
+                return null;
+            }
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('product-images')
+                .getPublicUrl(data.path);
+
+            return publicUrl;
+        }
+
+        // ================== توایع نمایشی ==================
+        function showAlert(title, message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert-message ${type}`;
+            alertDiv.innerHTML = `
+    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+    <div>
+      <strong>${title}</strong>
+      <p>${message}</p>
+    </div>
+  `;
+            document.body.appendChild(alertDiv);
+            setTimeout(() => alertDiv.remove(), 3000);
+        }
+
+        // ================== مدیریت فرم محصول ==================
+        document.getElementById('add-product-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('product-name').value;
+            const category = document.getElementById('product-category').value;
+            const price = parseFloat(document.getElementById('product-price').value);
+            const imageFile = document.getElementById('product-image').files[0];
+
+            if (!imageFile) {
+                showAlert("خطا", "لطفاً تصویری انتخاب کنید!", "error");
+                return;
+            }
+
+            const imageUrl = await uploadImage(imageFile);
+            if (!imageUrl) return;
+
+            const productData = { name, category, price, image_url: imageUrl };
+
+            if (currentEditId) {
+                await updateProduct(currentEditId, productData);
+            } else {
+                await saveProduct(productData);
+            }
+
+            // بازخوانی محصولات
+            products = await loadProducts();
+            document.getElementById('add-product-form').reset();
+            currentEditId = null;
+        });
+
+        // ================== راه‌اندازی اولیه ==================
+        document.addEventListener('DOMContentLoaded', async () => {
+            products = await loadProducts();
+            // بقیه توابع initMainPage و initAdminPage را اینجا فراخوانی کنید
+        });
+    </script>
+</body>
+
+</html>
